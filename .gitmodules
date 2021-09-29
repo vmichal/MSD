@@ -1,0 +1,3 @@
+[submodule "zadani"]
+	path = zadani
+	url = git@gitlab.fel.cvut.cz:aa4cc/msd/ukoly.git
