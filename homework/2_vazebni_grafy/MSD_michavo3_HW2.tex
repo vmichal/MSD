@@ -1,0 +1,186 @@
+\documentclass[twoside]{article}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% nastavení pisma a~češtiny
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+
+% odkazy
+\usepackage{url}
+
+\usepackage{float}
+% vícesloupcové tabulky
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{bbold}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{siunitx}
+
+% vnořené popisky obrázků
+\usepackage{subcaption}
+
+% automatická konverze EPS 
+\usepackage{graphicx} 
+\usepackage{epstopdf}
+\usepackage{amsmath}
+\epstopdfsetup{update}
+
+% odkazy a~záložky
+\usepackage[unicode=true, bookmarks=true,bookmarksnumbered=true,
+bookmarksopen=false, breaklinks=false,pdfborder={0 0 0},
+pdfpagemode=UseNone,backref=false,colorlinks=true] {hyperref}
+
+% Poznámky při překladu
+\usepackage{xkeyval}	% Inline todonotes
+\usepackage[textsize = footnotesize]{todonotes}
+\presetkeys{todonotes}{inline}{}
+\graphicspath{{./images}}
+
+%https://tex.stackexchange.com/questions/2783/bold-calligraphic-typeface
+\DeclareMathAlphabet\mathbfcal{OMS}{cmsy}{b}{n}
+
+% Zacni sekci slovem ukol
+\renewcommand{\thesection}{Úkol \arabic{section}}
+% enumerate zacina s pismenem
+\renewcommand{\theenumi}{\alph{enumi}}
+
+% smaz aktualni page layout
+\fancyhf{}
+% zahlavi
+\usepackage{titling}
+\fancyhf[HC]{\thetitle}
+\fancyhf[HLE,HRO]{\theauthor}
+\fancyhf[HRE,HLO]{\today}
+ %zapati
+\fancyhf[FLE,FRO]{\thepage}
+
+\title{Modelování a simulace dynamických systémů - úkol č. 2}
+\author{Vojtěch Michal}
+
+\begin{document}
+\maketitle
+
+\section{Doplňte poloviční šipku do vazebního grafu}
+%Doplňte správně poloviční šipku do daného vazebního grafu pro jednoduchý elektronický či mechanický systém
+Uvažujte situaci, kdy za provaz zvedáte do výšky nějaké závaží.
+Do náčrtku této situace zakreslete Vaši volbu kladného směru pohybu (rychlosti) a v souhlasu
+s touto volbou dokreslete do vazebního grafu JÁ \tikz \draw (0,0) -- (1,0); ZÁVAŽÍ poloviční šipku.
+
+\vspace{3cm}
+
+\section{Spočtěte modul transformátoru}
+%Spočtěte modul transformátoru pro zadaný systém z elektrické, mechanické či hydraulické domény
+Modelujte vícestupňovou převodovku pomocí kaskády transformátorů. Najděte modul transformátorů (podle konvence) a modul jednoho ekvivalentního transformátoru. Čísla v obrázku značí počet zubů.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.5\textwidth]{./figures/prevody.pdf}
+\end{figure}
+
+\textbf{Řešení:} Dvojice ozubených kol sdílející společnou hřídel sdílí i úhlovou rychlost otáčení $\omega$. Dvojice kol dotýkající se zuby vytváří zobecnělý transformátor.
+Pro každé kolo je počet zubů, které projdou bodem dotyku za sekundu, roven $f = N \frac{\omega}{2 \pi}$, kde $\omega$ je úhlová rychlost otáčení daného kola a $N$ je počet jeho zubů.
+Protože se v bodě dotyku zuby obou kol střídají, frekvence $f$ je zachována. Odtud pro kola 1 a 2 platí
+\begin{equation}
+	\begin{split}
+		f_1 &= f_2 \\
+		N_1 \frac{\omega_1}{2 \pi} &= N_2 \frac{\omega_2}{2 \pi} \\
+		\omega_2 &= \underbrace{\frac{N_1}{N_2}}_{T} \omega_1,
+	\end{split}
+\end{equation}
+analogicky poté i pro ostatní páry. Ve směru od vstupu k výstupu
+proto mají transformátory moduly $T_1 = \frac{24}{12} = 2$, $T_2 = \frac{28}{15} = $ a $T_3 = \frac{40}{20} = 2$.
+Protože převod ozubenými koly současně mění směr rotace, bylo by možné uvažovat záporné moduly $T_i$.
+Přirozenější se však jeví uvažovat kladný směr $\omega_2$ v opačném směru než kladný směr rotace $\omega_1$,
+tím zůstane modul dílčích transofrmátorů kladný.
+
+Po spojení vytvoří tři transformátory jeden ekvivalentní nový s modulem $T = T_1 T_2 T_3 = 7.4\bar{6}$.
+
+\section{Určete modul gyrátoru modelujícího stejnosměrný motor}
+%Použijte gyrátor pro modelování běžného kartáčového stejnosměrného motoru s permanentním magnetem. Pro zadané fyzikální parametry motoru určete modul gyrátoru
+Ke stejnosměrnému motoru je připojena zátěž, která je popsána rovnicí $M=5\cdot10^{-5}\omega$ ($\omega$ je úhlová rychlost a $M$ brzdný moment) .
+V ustáleném stavu teče do motoru proud 300\,mA a má otáčky 5700\,rpm. Odpor vinutí je 20\,$\Omega$ a indukčnost 200\,$\mu$H. Určete modul gyrátoru, který tento motor modeluje. 
+
+\vspace{6cm}
+
+\section{Maximální přenos výkonu ze zdroje do spotřebiče}
+%Pro zadaný zdroj a spotřebič s jejich výkonovými (zatěžovacími) charakteristikami použijte zobecněný transformátor pro zajištění maximálního přenosu výkonu ze zdroje do spotřebiče
+Hydraulická pumpa dodávající konstantní tlak 17\,MPa s maximálním průtokem 0,5\,m$^3$/s je připojena k hydraulickému pístu. Píst pohybuje se zátěží, která je charakterizována lineárním vztahem mezi rychlostí a silou a to takovým, že při působení síly 18\,kN se pohybuje rychlostí 30\,mm/s. Jakým prvkem je píst ve vazebním grafu modelován, jaký má modul pro maximální rychlost pohybu a maximální přenos výkonu a čemu tento modul fyzicky odpovídá?
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.65\textwidth]{./figures/charakteristiky.pdf}
+	\caption{Charakteristika pumpy a zátěže.}
+\end{figure}
+
+
+\vspace{6cm}
+
+\section{Odvoďte vztah pro energii akumulovanou v prvku typu zobecněná setrvačnost I}
+A to jak pro nelineární tak i pro lineární prvek.
+
+\textbf{Řešení:} 
+Pro zobecněnou setrvačnost z definice platí 
+\begin{equation}
+	\dot{q} = \dot{q}(p),
+	\label{eq:setrvacnost_def}
+\end{equation}
+kde $\dot{q}$ je \textit{zobecnělý tok} a $p = \int e \text{d}t$ je \textit{zobecnělá hybnost}.
+Akumulovaná (kinetická) energie je rovna práci vykonané během "rozpohybovávání" prvku
+\begin{equation}
+	\mathcal{T} = \int_{t_1}^{t_2} \underbrace{e(t) \dot{q}(t)}_{P(t)} \text{d}t,
+	\label{eq:setrvacnost_obecne}
+\end{equation}
+s využitím vztahu \eqref{eq:setrvacnost_def} obecně platí
+\begin{equation}
+	\mathcal{T} = \int_{t_1}^{t_2} \frac{\text{d}p(t)}{\text{d}t} \dot{q}(p) \text{d}t = \int_{p_1}^{p_2} \dot{q}(p) \text{d}p.
+	\label{eq:setrvacnost_energie_obecne}
+\end{equation}
+V lineárním případě má definiční vztah \eqref{eq:setrvacnost_def} tvar $\dot{q} = \frac{1}{I} p$,
+poté je možné obecný vztah pro energii \eqref{eq:setrvacnost_energie_obecne} upravit dále na
+\begin{equation}
+	\mathcal{T} = \frac{1}{I} \int_{p_1}^{p_2} p \text{d}p = \frac{1}{2I} (p_2^2 - p_1^2).
+\end{equation}
+Za předpokladu nulových počátečních podmínek ($p_1 = 0$) získáme známý vztah
+\begin{equation}
+	\mathcal{T} = \frac{1}{2I}p^2 = \frac{1}{2} I \dot{q}^2.
+\end{equation}
+
+
+\section{Odvoďte vztah pro energii akumulovanou v prvku typu zobecněná poddajnost C}
+A to jak pro nelineární tak i pro lineární prvek.
+
+\textbf{Řešení:} 
+Pro zobecněnou poddajnost z definice platí 
+\begin{equation}
+	e = e(q),
+	\label{eq:poddajnost_def}
+\end{equation}
+kde $e$ je \text{zobecnělé úsilí} a $q = \int \dot{q}\,\text{d}t$ je \textit{zobecnělá výchylka}.
+Akumulovaná (potenciální) energie je rovna práci vykonané během "nabíjení" prvku
+\begin{equation}
+	\mathcal{V} = \int_{t_1}^{t_2} \underbrace{e(t) \dot{q}(t)}_{P(t)} \text{d}t,
+	\label{eq:poddajnosT_obecne}
+\end{equation}
+s využitím vztahu \eqref{eq:poddajnost_def} obecně platí
+\begin{equation}
+	\mathcal{V} = \int_{t_1}^{t_2} e(q) \frac{\text{d}q}{\text{d}t} \text{d}t = \int_{q_1}^{q_2} e(q) \text{d}q.
+	\label{eq:poddajnost_energie_obecne}
+\end{equation}
+V lineárním případě má definiční vztah \eqref{eq:poddajnost_def} tvar $e = \frac{1}{C} q$,
+poté je možné obecný vztah pro energii \eqref{eq:poddajnost_energie_obecne} upravit dále na
+\begin{equation}
+	\mathcal{V} = \frac{1}{C} \int_{q_1}^{q_2} q \text{d}q = \frac{1}{2C} (q_2^2 - q_1^2).
+\end{equation}
+Za předpokladu nulových počátečních podmínek ($q_1 = 0$) získáme známý vztah
+\begin{equation}
+	\mathcal{V} = \frac{1}{2C}q^2 = \frac{1}{2} C e^2.
+\end{equation}
+
+\end{document}
