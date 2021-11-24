@@ -1,0 +1,236 @@
+\documentclass[twoside]{article}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% nastavení pisma a~češtiny
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+
+% odkazy
+\usepackage{url}
+
+\usepackage{float}
+% vícesloupcové tabulky
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{bbold}
+\usepackage{mathtools}
+\usepackage{commath}
+
+% vnořené popisky obrázků
+\usepackage{subcaption}
+
+% automatická konverze EPS 
+\usepackage{graphicx} 
+\usepackage{epstopdf}
+\usepackage{amsmath}
+\epstopdfsetup{update}
+
+% odkazy a~záložky
+\usepackage[unicode=true, bookmarks=true,bookmarksnumbered=true,
+bookmarksopen=false, breaklinks=false,pdfborder={0 0 0},
+pdfpagemode=UseNone,backref=false,colorlinks=true] {hyperref}
+
+% Poznámky při překladu
+\usepackage{xkeyval}	% Inline todonotes
+\usepackage[textsize = footnotesize]{todonotes}
+\presetkeys{todonotes}{inline}{}
+\graphicspath{{./images}}
+
+%https://tex.stackexchange.com/questions/2783/bold-calligraphic-typeface
+\DeclareMathAlphabet\mathbfcal{OMS}{cmsy}{b}{n}
+
+% Zacni sekci slovem ukol
+\renewcommand{\thesection}{Úkol \arabic{section}}
+% enumerate zacina s pismenem
+\renewcommand{\theenumi}{\alph{enumi}}
+
+% smaz aktualni page layout
+\fancyhf{}
+% zahlavi
+\usepackage{titling}
+\fancyhf[HC]{\thetitle}
+\fancyhf[HLE,HRO]{\theauthor}
+\fancyhf[HRE,HLO]{\today}
+ %zapati
+\fancyhf[FLE,FRO]{\thepage}
+
+% údaje o autorovi
+\title{Modelování a simulace dynamických systémů - úkol č. 9}
+\author{Vojtěch Michal}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+Zadání je dostupné na \url{https://moodle.fel.cvut.cz/mod/assign/view.php?id=200293}. \\
+
+Z předchozího řešení je známo
+
+\begin{equation}
+	R_1^0 = \begin{bmatrix}
+		\cos(\theta_1) & 0 & -\sin(\theta_1) \\
+		\sin(\theta_1) & 0 & \cos(\theta_1) \\
+		0 & -1 & 0 
+	\end{bmatrix},
+\end{equation}
+
+\begin{equation}
+	R_2^1 = \begin{bmatrix}
+		\cos(\theta_2) & -\sin(\theta_2) & 0 \\
+		\sin(\theta_2) & \cos(\theta_2) & 0 \\
+		0 & 0 & 1 
+	\end{bmatrix}.
+\end{equation}
+
+Máme dánu délky ramen $l_1$, $l_2$, a hmotnost ramen $m_1$, $m_2$.
+Jsou dány matice momentů setrvačnosti ramen v příslušných souřadných soustavách
+\begin{equation}
+	I_1^1 = \begin{bmatrix}
+		I_{x_1} & 0 &0 \\
+		0 & I_{y_1} &0 \\
+		0 & 0 & I_{z_1} 
+	\end{bmatrix},
+\end{equation}
+
+\begin{equation}
+	I_2^2 = \begin{bmatrix}
+		I_{x_2} & 0 &0 \\
+		0 & I_{y_2} &0 \\
+		0 & 0 & I_{z_2} 
+	\end{bmatrix}
+\end{equation}
+
+a jakobiány translační
+
+\begin{equation}
+	J_{1, \text{TR}} = \begin{bmatrix}
+		-\frac{l_1}{2} \sin(\theta_1) & 0 \\
+		\frac{l_1}{2} \cos(\theta_1) & 0 \\
+		0 & 0
+	\end{bmatrix},
+\end{equation}
+
+\begin{equation}
+	J_{2, \text{TR}} = \begin{bmatrix}
+		-l_1 \sin(\theta_1) - \frac{l_2}{2} \sin(\theta_1) \cos(\theta_2) & -\frac{l_2}{2} \cos(\theta_1) \sin(\theta_2) \\
+		l_1 \cos(\theta_1) + \frac{l_2}{2} \cos(\theta_1) \cos(\theta_2) & -\frac{l_2}{2} \sin(\theta_1) \sin(\theta_2) \\
+		0 & - \frac{l_2}{2} \cos(\theta_2)
+	\end{bmatrix},
+\end{equation}
+
+i rotační
+
+\begin{equation}
+	J_{1, \text{ROT}} = \begin{bmatrix}
+		0 & 0 \\ 
+		0 & 0 \\ 
+		1 & 0
+	\end{bmatrix},
+\end{equation}
+
+\begin{equation}
+	J_{2, \text{ROT}} = \begin{bmatrix}
+		0 & -\sin(\theta_1) \\
+		0 & \cos(\theta_1) \\
+		1 & 0
+	\end{bmatrix}.
+\end{equation}
+
+\section{Zobecnělá matice setrvačnosti}
+
+Z definice platí
+
+\begin{equation}
+	M(q) = \sum_{i=1}^2 \left( J_{i, \text{TR}}^\text{T} \cdot m_i \cdot J_{i, \text{TR}} + J_{i, \text{ROT}}^\text{T}
+	\cdot R_i^0 \cdot I_i^i \cdot (R_i^0)^\text{T} \cdot J_{i, \text{ROT}} \right).
+\end{equation}
+
+Po dosazení vyjde matice
+\begin{equation}
+	\mathbf{M}(q) = \begin{bmatrix}
+		M_{11} & M_{12} \\
+		M_{21} & M_{22}
+	\end{bmatrix},
+	\label{eq:M}
+\end{equation}
+kde dílčí prvky $M_{ij}$ jsou
+\begin{equation}
+	\begin{split}
+		M_{11} &= \mathrm{Ix}_{2} \sin^2(\theta_2) +\mathrm{Iy}_{1}+\frac{{l_{1}}^2\,m_{1}}{4}+{l_{1}}^2\,m_{2}+\mathrm{Iy}_{2}\,{\cos\left(\theta _{2}\right)}^2+\frac{{l_{2}}^2\,m_{2}\,{\cos\left(\theta _{2}\right)}^2}{4}+l_{1}\,l_{2}\,m_{2}\,\cos\left(\theta _{2}\right), \\
+		M_{12} &= 0, \\
+		M_{21} &= 0, \\
+		M_{22} &= \frac{m_{2}\,{l_{2}}^2}{4}+\mathrm{Iz}_{2}.
+	\end{split}
+\end{equation}
+
+\section{Potenciální energie}
+
+Z definice platí
+\begin{equation}
+	\mathcal{V} = \sum_{i=1}^2 (m_i \cdot \begin{bmatrix}
+		-g & 0 & 0
+	\end{bmatrix} \cdot r^0_{c_i}),
+\end{equation}
+tedy dílčí potenciální energie lze získat jako součin hmotnosti $i$-tého ramene a průměru polohy jeho těžiště to svislé osy.
+Vzhledem k orientaci světového souřadného systému je svislý směr reprezentován osou $x$ a tedy první složkou vektoru.
+
+Po dosazení konkrétních proměnných
+\begin{equation}
+	\mathcal{V} = -g\,\left(m_{2}\,\left(l_{1}\,\cos\left(\theta _{1}\right)+\frac{l_{2}\,\cos\left(\theta _{1}\right)\,\cos\left(\theta _{2}\right)}{2}\right)+\frac{l_{1}\,m_{1}\,\cos\left(\theta _{1}\right)}{2}\right)
+\end{equation}
+a po parciálním derivování
+\begin{equation}
+	\mathbf{G}(q) = \begin{bmatrix}
+		g\,\left(m_{2}\,\left(l_{1}\,\sin\left(\theta _{1}\right)+\frac{l_{2}\,\cos\left(\theta _{2}\right)\,\sin\left(\theta _{1}\right)}{2}\right)+\frac{l_{1}\,m_{1}\,\sin\left(\theta _{1}\right)}{2}\right) \\
+		\frac{g\,l_{2}\,m_{2}\,\cos\left(\theta _{1}\right)\,\sin\left(\theta _{2}\right)}{2}
+	\end{bmatrix}.
+	\label{eq:G}
+\end{equation}
+
+\section{Coriolisova matice}
+
+Z definice Christoffelových symbolů platí
+\begin{equation}
+	\begin{split}
+		c_{ijk}(q) &= \frac{1}{2} \left(\frac{\partial M_{ki}}{\partial q_j} + \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ij}}{\partial q_k}\right), \\
+		C_{kj}(q, \dot{q}) &= \sum_{i=1}^2 c_{ijk}(q) \cdot \dot{q_i},
+	\end{split}
+\end{equation}
+Coriolisova matice má poté tvar
+\begin{equation}
+	\mathbf{C}(q, \dot{q}) = \begin{bmatrix}
+		C_{11}(q, \dot{q}) & C_{12}(q, \dot{q}) \\
+		C_{21}(q, \dot{q}) & C_{22}(q, \dot{q})
+	\end{bmatrix},
+	\label{eq:C}
+\end{equation}
+
+kde dílčí prvky jsou
+\begin{equation}
+	\begin{split}
+		C_{11}(q, \dot{q}) &= -\dot{\theta}_{2}\,\left(\frac{m_{2}\,\sin\left(2\,\theta _{2}\right)\,{l_{2}}^2}{8}+\frac{l_{1}\,m_{2}\,\sin\left(\theta _{2}\right)\,l_{2}}{2}-\frac{\mathrm{Ix}_{2}\,\sin\left(2\,\theta _{2}\right)}{2}+\frac{\mathrm{Iy}_{2}\,\sin\left(2\,\theta _{2}\right)}{2}\right) ,\\
+		C_{12}(q, \dot{q}) &= -\frac{\dot{\theta}_{1}\,\left(\frac{m_{2}\,\sin\left(2\,\theta _{2}\right)\,{l_{2}}^2}{2}+2\,l_{1}\,m_{2}\,\sin\left(\theta _{2}\right)\,l_{2}-2\,\mathrm{Ix}_{2}\,\sin\left(2\,\theta _{2}\right)+2\,\mathrm{Iy}_{2}\,\sin\left(2\,\theta _{2}\right)\right)}{4} ,\\
+		C_{21}(q, \dot{q}) &= -\frac{\dot{\theta}_{1}\,\left(m_{2}\,\sin\left(2\,\theta _{2}\right)\,{l_{2}}^2+4\,l_{1}\,m_{2}\,\sin\left(\theta _{2}\right)\,l_{2}-4\,\mathrm{Ix}_{2}\,\sin\left(2\,\theta _{2}\right)+4\,\mathrm{Iy}_{2}\,\sin\left(2\,\theta _{2}\right)\right)}{8} ,\\
+		C_{22}(q, \dot{q}) &= 0.
+	\end{split}
+\end{equation}
+
+\section{Lagrangeova rovnice}
+
+S použitím matic vypočtených v rovnicích \eqref{eq:G}, \eqref{eq:M} a \eqref{eq:C} lze Lagrangeovu rovnici studovaného systému zapsat ve tvaru
+\begin{equation}
+	\mathbf{M}(q) \ddot{q} + \mathbf{C}(q, \dot{q}) \dot{q} + \mathbf{G}(q) = Q,
+\end{equation}
+kde $Q$ reprezentuje dále neupřesněné vstupní síly a momenty.
+
+
+\end{document}
+
+
