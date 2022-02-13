@@ -1,3 +1,6 @@
 [submodule "zadani"]
 	path = zadani
 	url = git@gitlab.fel.cvut.cz:aa4cc/msd/ukoly.git
+[submodule "semestral-assignment/zadani"]
+	path = semestral-assignment/zadani
+	url = git@gitlab.fel.cvut.cz:aa4cc/msd/semestralni-ulohy-pro-predmet-msd.git
